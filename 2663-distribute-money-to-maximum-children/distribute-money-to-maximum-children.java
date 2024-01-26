@@ -9,17 +9,15 @@ class Solution {
         if (count_7 > children) count_7 = children;
         int rem_money = money - count_7*7;
         if (rem_money == 0) return count_7;
-         int rem_child = children - count_7;
-        
         if (rem_money == 3) {
-            // int rem_child = children - count_7;
+            int rem_child = children - count_7;
             if (rem_child <= 1) {
                 return count_7 - 1;
             } else {
                 return count_7;
             }
         } else {
-            // int rem_child = children - count_7;
+            int rem_child = children - count_7;
             if (rem_child == 0) {
                 return count_7 - 1;
             } else {
