@@ -1,22 +1,20 @@
 class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
-        return break_word(s, new HashSet<>(wordDict), new HashMap<>());
+        return wordBreak(s, new HashSet<>(wordDict), 0, new HashMap<>());
     }
-
-    public boolean break_word(String s, Set<String> words, Map<String, Boolean> map) {
-        if (s.isEmpty()) return true;
-        if (map.containsKey(s)) return map.get(s);
-        for (int i=0; i<s.length(); i++) {
-            String sub_str = s.substring(0, i+1);
-            if (words.contains(sub_str)) {
-                boolean possible = break_word(s.substring(i+1), words, map);
-                if (possible) {
-                    map.put(s, true);
+    public boolean wordBreak(String s, Set<String> words, int index, Map<Integer, Boolean> map) {
+        if (index == s.length()) {
+            return true;
+        }
+        if (map.containsKey(index)) return map.get(index);
+        for (int i=index; i<s.length(); i++) {
+            if (words.contains(s.substring(index, i+1))) {
+                if (wordBreak(s, words, i+1, map)) {
                     return true;
                 }
             }
         }
-        map.put(s, false);
+        map.put(index, false);
         return false;
     }
 }
