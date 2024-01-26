@@ -1,24 +1,27 @@
 class Solution {
     public List<String> generateParenthesis(int n) {
+        if (n < 1) return Collections.emptyList();
         List<String> result = new ArrayList<>();
-        if (n < 1) {
-            return result;
-        }
-        generate("", result, 0, 0, n);
+        create(0, 0, new StringBuilder(""), n, result);
         return result;
     }
     
-    public void generate(String soFar, List<String> result, int open, int close, int max) {
-        if (open > max || close > max) return;
-        if (open == max && close == max) {
-            result.add(soFar);
+    public void create(int openCount, int closeCount, StringBuilder sb, int n, List<String> result) {
+        if (openCount > n || closeCount > n) return;
+        if (openCount == n && closeCount == n) {
+            result.add(sb.toString());
             return;
         }
-        if (open > close) {
-            generate(soFar+")", result, open, close+1, max);
+        if (openCount < n) {
+            sb.append("(");
+            create(openCount + 1, closeCount, sb, n, result);
+            sb.deleteCharAt(sb.length() - 1);
         }
-        if (open < max) {
-            generate(soFar+"(", result, open+1, close, max);
+        if (closeCount < openCount) {                    
+            sb.append(")");
+            create(openCount, closeCount+ 1, sb, n, result);
+            sb.deleteCharAt(sb.length() - 1);
         }
     }
+
 }
