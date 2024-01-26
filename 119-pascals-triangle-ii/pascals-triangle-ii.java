@@ -1,15 +1,19 @@
 class Solution {
     public List<Integer> getRow(int rowIndex) {
-        int[] arr = new int[rowIndex + 1];
-        arr[0] = 1;
+        List<Integer> list = new ArrayList<>(rowIndex);
+        for (int i=0; i<=rowIndex; i++) list.add(0);
+        list.set(0, 1);
         rowIndex--;
-        int index = 1;
-        while (rowIndex-- >= 0) {
-            for (int i=index; i > 0; i--) {
-                arr[i] = arr[i] + arr[i-1];
+        int i = 1;
+        while (rowIndex >= 0) {
+            list.set(i, 1);
+            for (int j=i-1; j>0; j--) {
+                int sum = list.get(j) + list.get(j-1);
+                list.set(j, sum);
             }
-            index++;            
+            i++;
+            rowIndex--;
         }
-        return Arrays.stream(arr).boxed().collect(Collectors.toList());
+        return list;
     }
 }
