@@ -1,12 +1,7 @@
 class Solution {
     public int reverse(int x) {
-        // if (x < 0) return reverseNegative(x);
-        // return reversePositive(x);
-        if (x == Integer.MIN_VALUE) return 0;
-        boolean isNegative = x < 0;
-        if (!isNegative) x *= -1;
-        int res = reverseNegative(x);
-        return isNegative? res: -res;
+        if (x < 0) return reverseNegative(x);
+        return reversePositive(x);
     }
     public int reversePositive(int n) {
         int res = 0;
