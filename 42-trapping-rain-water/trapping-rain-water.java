@@ -3,17 +3,12 @@ class Solution {
         // find the amount of water on every bar
         if (height == null || height.length < 3) return 0;
         int volume = 0, n = height.length;
-        Stack<Integer> stack = new Stack<>();
         for (int i=0; i<n; i++) {
-            int current = height[i];
-            while (!stack.isEmpty() && current > height[stack.peek()]) {
-                int popped_height = height[stack.pop()];
-                if (stack.isEmpty()) break;
-                int distance = i - stack.peek() - 1;
-                int bounded_height = Math.min(current, height[stack.peek()]) - popped_height;
-                volume += (distance*bounded_height);
-            }
-            stack.push(i);
+            // find max bar on left
+            int maxLeft = maxOnLeft(height, i);
+            // find max bar on right
+            int maxRight = maxOnRight(height, i);
+            volume += Math.min(maxLeft, maxRight) - height[i];
         }
         return volume;
     }
