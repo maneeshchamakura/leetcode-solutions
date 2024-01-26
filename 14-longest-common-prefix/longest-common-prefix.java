@@ -1,27 +1,36 @@
 class Solution {
+    class TrieNode {
+        Map<Character, TrieNode> map;
+        int count;
+        TrieNode() {
+            map = new HashMap<>();
+            count = 0;
+        }
+        int getSize() {
+            return map.size();
+        }
+    }
     public String longestCommonPrefix(String[] strs) {
-        if (strs == null || strs.length == 0) return "";
-        return longestCommonPrefix(strs, 0, strs.length - 1);        
-    }
-    
-    public String longestCommonPrefix(String[] strs, int l, int r) {
-        if (l == r) {
-            return strs[l];
-        } else {
-            int mid = (l + r)/2;
-            String lcpLeft = longestCommonPrefix(strs, l, mid);
-            String lcpRight = longestCommonPrefix(strs, mid + 1, r);
-            return commonPrefix(lcpLeft, lcpRight);
+        if (strs == null || strs.length < 1) return "";
+        TrieNode root = new TrieNode();
+        for(String s:strs) {
+            insert(root, s);
         }
+        int end=0;
+        while(end<strs[0].length() && root.getSize() == 1 && root.count == strs.length) {
+            root = root.map.get(strs[0].charAt(end));
+            end++;            
+        }
+        return strs[0].substring(0, end);
     }
     
-    String commonPrefix(String left, String right) {
-        int min = Math.min(left.length(), right.length());
-        for (int i=0; i<min; i++) {
-            if (left.charAt(i) != right.charAt(i)) {
-                return left.substring(0, i);
+    public void insert(TrieNode root, String s) {
+        for(char c: s.toCharArray()) {
+            root.count++;
+            if (!root.map.containsKey(c)) {
+                root.map.put(c, new TrieNode());
             }
-        }
-        return left.substring(0, min);
+            root = root.map.get(c);
+        }        
     }
 }
