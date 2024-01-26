@@ -1,32 +1,29 @@
 class Solution {
+    Integer[] dp;
     public int deleteString(String s) {
-        return process(s, 0, s.length(), new HashMap<>());
+        dp = new Integer[s.length()];
+        return helper(s , 0);
+        
     }
     
-    public int process(String s, int index, int n, Map<Integer, Integer> memo) {
-        if (memo.containsKey(index)) return memo.get(index);
-        if (index == s.length() - 1) return 1;
-        int max = 1;
-        String current = s.substring(index, s.length());
-        for(int len=1; len <= n/2; len++) {
-            if (memo.containsKey(index + len - 1)) continue;
-            if (!is_len_possible(current, len)) break;
-            if (first_k_equal(current, len)) {
-                max = Math.max(max, 1 + process(s, index + len, n, memo));
+    public int helper(String s , int index){
+        if(index == s.length()) return 0;
+        if(dp[index] != null) return dp[index];
+        
+        int res = 0;
+        boolean found = false;
+        for(int i = index; i < index + (s.length() - index)/2 ; i++){
+            if(dp[i] == null){
+                String a = s.substring(index , i + 1);
+                String b = s.substring(i + 1 , i + 1 + (i - index + 1));
+                if(a.equals(b)){
+                    found = true;
+                    res = Math.max(res , 1 + helper(s , i + 1));
+                }
             }
         }
-        memo.put(index, max);
-        return memo.get(index);
-    }
-    
-    public boolean is_len_possible(String s, int k) {
-        return s.length() >= 2*k;
-    }
-    
-    public boolean first_k_equal(String s, int k) {
-        if (s.length() < 2*k) return false;
-        String firstHalf = s.substring(0, k);
-        String secondHalf = s.substring(k, 2*k);
-        return firstHalf.equals(secondHalf);
+        if(!found)
+            return dp[index] = 1;
+        return dp[index] = res;
     }
 }
