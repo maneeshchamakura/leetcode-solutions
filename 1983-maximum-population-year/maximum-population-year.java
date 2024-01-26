@@ -14,7 +14,7 @@ class Solution {
             int current_start = logs[i][0];
             int current_end = logs[i][1];
             pq.offer(current_end);
-            if (current_start >= pq.peek()) {
+            while (current_start >= pq.peek()) {
                 pq.poll();
             }
             if (pq.size() > maxPop) {
