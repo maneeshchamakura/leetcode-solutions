@@ -1,31 +1,8 @@
 class Solution {
     public List<String> wordBreak(String s, List<String> wordDict) {
-        return wordBreak(s, 0, wordDict, new HashMap<>());
+        Map<Integer, List<String>> cache = new HashMap<>();
+        return wordBreak(s, 0, new HashSet<>(wordDict), cache);
     }
-    
-    public List<String> wordBreak(String s ,int index, List<String> wordDict, Map<Integer, List<String>> cache) {
-        List<String> result = new ArrayList<>();
-        String current = s.substring(index);
-        if (cache.containsKey(index)) return cache.get(index);
-        for(String word: wordDict) {
-            if (current.startsWith(word)) {
-                StringBuffer sb = new StringBuffer("");
-                if (current.length() == word.length()) {
-                    result.add(current);
-                    continue;
-                }                
-                int j = index;
-                j+= word.length();
-                List<String> strings = wordBreak(s, j, wordDict, cache);
-                for(String temp: strings) {
-                    result.add(word + " " + temp);
-                } 
-            }
-        } 
-        cache.put(index, result);
-        return result;
-    }
-    
     public List<String> wordBreak(String s, int index, Set<String> words, Map<Integer, List<String>> cache) {
         if (index == s.length()) return null;
         if (cache.containsKey(index)) return cache.get(index);
