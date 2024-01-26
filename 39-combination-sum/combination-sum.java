@@ -15,9 +15,9 @@ class Solution {
     }
     public List<List<Integer>> combinationSum(int[] nums, int i, int target) {
         if (i >= nums.length || nums[i] > target) return null;
-        // if (cache.get(i).containsKey(target)) {
-        //     return cache.get(i).get(target);
-        // }
+        if (cache.get(i).containsKey(target)) {
+            return cache.get(i).get(target);
+        }
         // take this number any number of times
         List<List<Integer>> local = new ArrayList<>();
         int temp = target;
@@ -42,7 +42,7 @@ class Solution {
         List<List<Integer>> answers = combinationSum(nums, i+1, temp);
         if (answers != null)
         local.addAll(answers);
-        // cache.get(i).put(target, local);
+        cache.get(i).put(target, local);
         return local;
     }
 }
