@@ -17,7 +17,7 @@ class Solution {
                 high = mid - 1;
             }
         }
-        return (nums[low] == target) ? low: -1;
+        return (low == high && nums[low] == target) ? low: -1;
     }
     public int lastOccurence(int[] nums, int target) {
         int low = 0, high = nums.length - 1;
@@ -25,8 +25,12 @@ class Solution {
             int mid = low + (high - low)/2;
             if (nums[mid] == target) {
                 if (mid == low) {
-                    if (nums[mid] == nums[mid+1]) return mid+1;
-                    return mid;
+                    if (nums[mid+1] > nums[mid]) {                        
+                        high = low;
+                    } else if (nums[mid+1] == nums[mid]){
+                        low = high;
+                    }
+                    break;
                 } else {
                     low = mid;   
                 }                
@@ -36,6 +40,6 @@ class Solution {
                 high = mid - 1;
             } 
         }
-        return (nums[low] == target) ? low: -1;
+        return (low == high && nums[low] == target) ? low: -1;
     }
 }
