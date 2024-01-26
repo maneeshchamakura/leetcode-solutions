@@ -1,43 +1,24 @@
 class Solution {
-    static class Interval {
-        int start, end;
-        Interval(int start, int end) {
-            this.start = start;
-            this.end = end;
-        }
-    }
     public int[][] merge(int[][] intervals) {
-        List<Interval> intervals_list = new ArrayList<>();
-        for(int[] interval: intervals) {
-            intervals_list.add(new Interval(interval[0], interval[1]));
-        }
-        Collections.sort(intervals_list, (a, b) -> {
-            int val = Integer.compare(a.start, b.start);
-            if (val == 0) return Integer.compare(a.end, b.end);
-            return val;
-        });
-        List<Interval> result = new ArrayList<>();
-        int index = 0;
-        int n = intervals_list.size();
-        while (index < n) {
-            int next = index + 1;
-            int start = intervals_list.get(index).start;
-            int end = intervals_list.get(index).end;
-            while (next < n && intervals_list.get(next).start >= start &&
-            intervals_list.get(next).start <= end) {
-                end = Math.max(end, intervals_list.get(next).end);
-                next++;
+        if (intervals == null || intervals.length == 0) return intervals;
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        int n = intervals.length;
+        int[][] result = new int[n][2];
+        int resultIndex = 0;
+        result[0][0] = intervals[0][0];
+        result[0][1] = intervals[0][1];
+        for (int i=1; i<n; i++) {
+            int currentStart = intervals[i][0], currentEnd = intervals[i][1];
+            int resultStart = result[resultIndex][0], resultEnd = result[resultIndex][1];
+            if (resultEnd >= currentStart) {
+                int temp = Math.max(resultEnd, currentEnd);
+                result[resultIndex][1] = temp;
+            } else {
+                resultIndex++;
+                result[resultIndex][0] = currentStart;
+                result[resultIndex][1] = currentEnd;
             }
-            index = next;
-            result.add(new Interval(start, end));
         }
-        int[][] res_arr = new int[result.size()][2];
-        int x = 0;
-        for(int[] sub_arr: res_arr) {
-            sub_arr[0] = result.get(x).start;
-            sub_arr[1] = result.get(x).end;
-            x++;
-        }
-        return res_arr;
+        return Arrays.copyOfRange(result, 0, resultIndex+1);
     }
 }
