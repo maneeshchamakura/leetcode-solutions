@@ -1,35 +1,26 @@
 class Solution {
     public int kthSmallest(int[][] matrix, int k) {
         int n = matrix.length;
-        int start=matrix[0][0], end=matrix[n-1][n-1];
-        while (start < end) {
-            int mid = (start + (end - start)/2);
-            int[] res = {matrix[0][0], matrix[n-1][n-1]};
-            int count = countLessThanTarget(matrix, mid, res);
-            if (count == k) {
-                return res[0];
-            } else if (count < k) {
-                start = res[1];
-            } else {
-                end = res[0];
-            }
+        PriorityQueue<Integer> queue = new PriorityQueue<>((code1, code2) -> {
+            int r1 = code1/n, c1=code1%n;
+            int r2 = code2/n, c2=code2%n;
+            return matrix[r1][c1] - matrix[r2][c2];
+        });
+        for (int i=0; i<n; i++) {
+            int code=i*n;
+            queue.add(code);
         }
-        return start;
-    }
-    public int countLessThanTarget(int[][] matrix, int target, int[] res) {
-        int count=0;
-        int n = matrix.length;
-        int row=0, col=n-1;
-        while (row < n && col >= 0) {
-            if (matrix[row][col] > target) {
-                res[1] = Math.min(res[1], matrix[row][col]);
-                col--;
-            } else {
-                res[0] = Math.max(res[0], matrix[row][col]);
-                count += (col + 1);
-                row++;
+        int result = -1;
+        while (k > 0) {
+            int code = queue.poll();
+            int r=code/n, c=code%n;
+            result = matrix[r][c];
+            if (c + 1 < n) {
+                int newCode = r*n + (c + 1);
+                queue.add(newCode);
             }
+            k--;
         }
-        return count;
+        return result;
     }
 }
