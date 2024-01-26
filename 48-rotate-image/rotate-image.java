@@ -1,29 +1,25 @@
 class Solution {
     public void rotate(int[][] matrix) {
-        // rotate can be done
-        // transpose the matrix
-        // swap columns
         int n = matrix.length;
-        for (int i=0; i<n; i++) {
-            for (int j=0; j<i; j++) {
-                swap(i, j, matrix);
+        int rowStart=0, colStart=0, rowEnd=n-1, colEnd=n-1;
+        while (rowStart < rowEnd) {
+            int col1 = colStart, row1 = rowStart, col2= colEnd, row2 = rowEnd;
+            while (col1 < colEnd && row1 < rowEnd && col2 > colStart && row2 > rowStart) {
+                int x = matrix[rowStart][col1];
+                int y = matrix[row1][colEnd];
+                matrix[row1][colEnd] = x;
+                int z = matrix[rowEnd][col2];
+                matrix[rowEnd][col2] = y;
+                int t = matrix[row2][colStart];
+                matrix[row2][colStart] = z;
+                matrix[rowStart][col1] = t;
+                col1++;
+                row1++;
+                col2--;
+                row2--;
             }
+            rowStart++; colStart++;
+            rowEnd--; colEnd--;
         }
-        
-        // swap the columns
-        for (int col = 0; col < n/2; col++) {
-            for (int row = 0; row < n; row++) {
-                // swap(row, col, matrix);
-                int temp = matrix[row][col];
-                matrix[row][col] = matrix[row][n - 1 - col];
-                matrix[row][n-1-col] = temp;
-            }
-        }
-    }
-
-    public void swap(int i, int j, int[][] matrix) {
-        int temp = matrix[i][j];
-        matrix[i][j] = matrix[j][i];
-        matrix[j][i] = temp;
     }
 }
