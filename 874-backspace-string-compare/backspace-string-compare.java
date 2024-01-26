@@ -1,37 +1,31 @@
 class Solution {
-    public boolean backspaceCompare(String s, String t) {
+    public boolean backspaceCompare(String S, String T) {
         Stack<Character> stack1 = new Stack<>();
-        // add all the characters to the string s
-        for (int i=0; i<s.length(); i++) {
-            char c = s.charAt(i);
+        Stack<Character> stack2 = new Stack<>();
+        for (int i=0; i<S.length(); i++) {
+            char c = S.charAt(i);
             if (c == '#') {
-                if (!stack1.isEmpty()) {
-                    stack1.pop();
-                }
+                // backspace 
+                // pop from the stack
+                if (!stack1.isEmpty()) stack1.pop();
             } else {
                 stack1.push(c);
             }
         }
-
-        Stack<Character> stack2 = new Stack<>();
-        // add all the characters from the string t
-        for (int i=0; i<t.length(); i++) {
-            char c = t.charAt(i);
+        for (int i=0; i<T.length(); i++) {
+            char c = T.charAt(i);
             if (c == '#') {
-                if (!stack2.isEmpty()) {
-                    stack2.pop();
-                }
+                // backspace 
+                // pop from the stack
+                if (!stack2.isEmpty()) stack2.pop();
             } else {
                 stack2.push(c);
             }
         }
-
-        while (!stack1.isEmpty() && !stack2.isEmpty()) {
-            int val1 = stack1.pop();
-            int val2 = stack2.pop();
-            if (val1 != val2) return false;
+        if (stack1.size() != stack2.size()) return false;
+        while (!stack1.isEmpty()) {
+            if (stack1.pop() != stack2.pop()) return false;
         }
-
-        return stack1.isEmpty() == stack2.isEmpty();
+        return true;        
     }
 }
