@@ -1,25 +1,28 @@
 class Solution {
     public int singleNonDuplicate(int[] nums) {
-        int low=0, high =nums.length-1;
-        while (low < high) {
-            int mid = (low + (high - low)/2);
-            if (nums[mid-1] != nums[mid] && nums[mid+1] != nums[mid]) {
-                return nums[mid];
-            }
+        int start = 0, n=nums.length, end=n-1;
+        while (start < end) {
+            int mid = start + (end - start)/2;
+            int leftLen, rightLen;
+            if (nums[mid-1] != nums[mid] && nums[mid+1] != nums[mid]) return nums[mid];
             if (nums[mid-1] == nums[mid]) {
-                if((mid - low + 1)%2 == 1) {
-                    high = mid;
+                leftLen = mid - start + 1;
+                rightLen = end - mid;
+                if (leftLen % 2 == 1) {
+                    end = mid;
                 } else {
-                    low = mid + 1;
+                    start = mid + 1;
                 }
             } else {
-                if ((high - mid + 1)% 2 == 1) {
-                    low = mid;
+                rightLen = end - mid + 1;
+                leftLen = mid - start;
+                if (rightLen % 2 == 1) {
+                    start = mid;
                 } else {
-                    high = mid - 1;
+                    end = mid - 1;
                 }
-            }
+            }            
         }
-        return nums[low];
+        return nums[start];
     }
 }
