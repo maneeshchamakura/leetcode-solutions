@@ -10,29 +10,25 @@
  */
 class Solution {
     public ListNode rotateRight(ListNode head, int k) {
-        int n = len(head);
-        if (head == null || n == 0) return head;
-        k = k % n;
+        if (head == null || k == 0) return head;
+        if (head.next == null) return head;
+        int len = length(head);
+        k = k % (len);
         if (k == 0) return head;
-        ListNode dummyHead = new ListNode();
-        ListNode temp = head;
-        int left_len = n - k;
-        while (left_len-- > 1) {
-            temp = temp.next;
-        } 
-        // now left_len is pointing last node in the first half
-        ListNode right_half = temp.next;
-        // set the next node to null
-        temp.next = null;
-        ListNode new_head = right_half;
-        while(right_half.next != null) {
-            right_half = right_half.next;
+        ListNode prev = null, current = head;
+        for (int i=1; i <= len - k; i++) {
+            prev = current;
+            current = current.next;
         }
-        right_half.next = head;
-        return new_head;
+        prev.next = null;
+        ListNode newHead = current;
+        while (current.next != null) {
+            current = current.next;
+        }
+        current.next = head;
+        return newHead;
     }
-
-    public int len(ListNode head) {
+    public int length(ListNode head) {
         int count = 0;
         while (head != null) {
             count++;
@@ -40,5 +36,4 @@ class Solution {
         }
         return count;
     }
-    
 }
