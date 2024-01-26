@@ -1,48 +1,29 @@
 class Solution {
-    List<Map<Integer, List<List<Integer>>>> cache;
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        if (candidates == null || candidates.length == 0) return new ArrayList<>();
-        cache = new ArrayList<>();
-        for (int i=0; i<candidates.length; i++) {
-            cache.add(new HashMap<>());
-        }
+        List<List<Integer>> result = new ArrayList<>();
+        if (candidates == null || candidates.length == 0) return result;
         Arrays.sort(candidates);
-        List<List<Integer>> res = combinationSum(candidates, 0, target);
-        if (res == null) {
-            return new ArrayList<>();
-        }
-        return res;
+        backtrack(candidates, target, 0, result, new ArrayList<>());
+        return result;
     }
-    public List<List<Integer>> combinationSum(int[] nums, int i, int target) {
-        if (i >= nums.length || nums[i] > target) return null;
-        if (cache.get(i).containsKey(target)) {
-            return cache.get(i).get(target);
+    
+    public void backtrack(int[] candidates, int target, int index, List<List<Integer>> result, List<Integer> list) {
+        if (target == 0) {
+            result.add(new ArrayList<>(list));
+            return;
         }
-        // take this number any number of times
-        List<List<Integer>> local = new ArrayList<>();
-        int temp = target;
-        List<Integer> path = new ArrayList<>();
-        while (nums[i] <= target) {
-            target -= nums[i];
-            path.add(nums[i]);
-            if (target == 0) {
-                local.add(new ArrayList<>(path));
-                break;
+        for (int i=index; i<candidates.length; i++) {
+            if (candidates[i] > target) break;
+            int sum = candidates[i], count=0;
+            while (sum <= target) {
+                list.add(candidates[i]);
+                backtrack(candidates, target - sum, i+1, result, list);
+                count++;
+                sum += candidates[i];
             }
-            List<List<Integer>> answers = combinationSum(nums, i+1, target);
-            if (answers != null) {
-                for (List<Integer> answer: answers) {
-                    List<Integer> tempList= new ArrayList<>(path);
-                    tempList.addAll(answer);
-                    local.add(tempList);
-                }
-            }
+            for (int k=0; k<count; k++) {
+                list.remove(list.size() - 1);
+            }            
         }
-        // don't take this number
-        List<List<Integer>> answers = combinationSum(nums, i+1, temp);
-        if (answers != null)
-        local.addAll(answers);
-        cache.get(i).put(target, local);
-        return local;
     }
 }
