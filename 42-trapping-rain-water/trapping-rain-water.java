@@ -1,26 +1,37 @@
 class Solution {
     public int trap(int[] height) {
-        int water_vol = 0;
-        if (height == null || height.length == 0) return 0;
-        int n = height.length;
-        int[] max_left = new int[n];
-        int[] max_right = new int[n];
-        // find the max_left including the current bar
-        int max = -1;
-        for(int i=0; i<n; i++) {
-            max_left[i] = Math.max(max, height[i]);
-            max = Math.max(max, height[i]);
+        // find the amount of water on every bar
+        if (height == null || height.length < 3) return 0;
+        int volume = 0, n = height.length;
+        Stack<Integer> stack = new Stack<>();
+        for (int i=0; i<n; i++) {
+            int current = height[i];
+            while (!stack.isEmpty() && current > height[stack.peek()]) {
+                int popped_height = height[stack.pop()];
+                if (stack.isEmpty()) break;
+                int distance = i - stack.peek() - 1;
+                int bounded_height = Math.min(current, height[stack.peek()]) - popped_height;
+                volume += (distance*bounded_height);
+            }
+            stack.push(i);
         }
-        // find the max_right including the current bar
-        max = -1;
-        for(int i=n-1; i>=0; i--) {
-            max_right[i] = Math.max(max, height[i]);
-            max = Math.max(max, height[i]);
+        return volume;
+    }
+    
+    public int maxOnLeft(int[] arr, int index) {
+        int leftMax = arr[index];
+        while (index >= 0) {
+            leftMax = Math.max(leftMax, arr[index]);
+            index--;
         }
-        for(int i=1; i<n-1; i++) {
-            int current_bar_vol = Math.min(max_left[i-1], max_right[i+1]) - height[i];
-            water_vol += (current_bar_vol < 0? 0: current_bar_vol);
+        return leftMax;
+    }
+    public int maxOnRight(int[] arr, int index) {
+        int rightMax = arr[index];
+        while (index < arr.length) {
+            rightMax = Math.max(rightMax, arr[index]);
+            index++;
         }
-        return water_vol;
+        return rightMax;
     }
 }
