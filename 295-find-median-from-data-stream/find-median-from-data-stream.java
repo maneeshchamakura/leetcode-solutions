@@ -1,43 +1,43 @@
 class MedianFinder {
-
-    PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> {
-        return Integer.compare(b, a);
-    });
-    PriorityQueue<Integer> minHeap = new PriorityQueue<>();
-
+    PriorityQueue<Integer> maxHeap, minHeap;
     public MedianFinder() {
-        // do nothing for now
-        maxHeap = new PriorityQueue<>((a, b) -> {
-            return Integer.compare(b, a);
-        });
+        maxHeap = new PriorityQueue<>((a,b) -> b - a);
         minHeap = new PriorityQueue<>();
     }
     
     public void addNum(int num) {
-        if (minHeap.isEmpty() && maxHeap.isEmpty()) {
+        int leftSize = maxHeap.size();
+        int rightSize = minHeap.size();
+        if (leftSize == 0) {
             maxHeap.add(num);
             return;
         }
-        if (num < maxHeap.peek()) {
-            maxHeap.add(num);
-        } else {
-            minHeap.add(num);
-        }
-        if (maxHeap.size() - minHeap.size() > 1) {
-            minHeap.add(maxHeap.poll());
-        } else if (minHeap.size() - maxHeap.size() > 1) {
-            maxHeap.add(minHeap.poll());
+        if (num > maxHeap.peek()) minHeap.add(num);
+        else maxHeap.add(num);
+        leftSize = maxHeap.size();
+        rightSize = minHeap.size();
+        if (Math.abs(leftSize - rightSize) > 1) {
+            if (leftSize > rightSize) {
+                minHeap.add(maxHeap.remove());
+            } else {
+                maxHeap.add(minHeap.remove());
+            }
         }
     }
     
     public double findMedian() {
-        int len1 = maxHeap.size();
-        int len2 = minHeap.size();
-        if ((len1 + len2) % 2 == 0) {
-            return ((double)maxHeap.peek() + (double)minHeap.peek())/2;
+        int leftSize = maxHeap.size();
+        int rightSize = minHeap.size();
+        if ((leftSize + rightSize) % 2 == 0) {
+            double res = minHeap.peek();
+            res += maxHeap.peek();
+            return res/2;
         } else {
-            if (maxHeap.size() > minHeap.size()) return maxHeap.peek();
-            return minHeap.peek();
+            if (leftSize > rightSize) {
+                return maxHeap.peek();
+            } else {
+                return minHeap.peek();
+            }
         }
     }
 }
