@@ -1,48 +1,49 @@
 class Solution {
     public int[] searchRange(int[] nums, int target) {
-        int[] arr = new int[2];
-        arr[0] = findFirstOccurence(nums, target);
-        arr[1] = findLastOccurence(nums, target);
-        return arr;
-    }
-     static int findFirstOccurence(int[] a, int key){
-        int first = 0;
-        int last = a.length - 1;
-        int mid = (first + (last - first)/2);
-        while(first <= last){
-            mid = first + (last - first)/2;
-            if(a[first] == key){
-                return first;
-            }
-            if(a[mid] == key){
-                last = mid;
-            } else if(a[mid] > key){
-                last = mid - 1;
-            } else {
-                first = mid + 1;
-            }
-        }
-        return -1;
+        int[] result = {-1, -1};
+        int index = find_first(nums, target, 0, nums.length-1);
+        if (index == -1) return result;
+        result[0] = index;
+        result[1] = find_last(nums, target, 0, nums.length-1);
+        return result;
     }
 
-    static int findLastOccurence(int[] a, int key){
-        int first = 0;
-        int last = a.length - 1;
-        while(first <= last){
-            int mid = (first + (last - first)/2);
-            if(a[last] == key){
-                return last;
-            }
-            if(mid == first && a[mid] == key )return mid;
-            if(a[mid] == key){
-                first = mid;
-            } else if(a[mid] < key){
-                first = mid + 1;
-            } else {
-                last = mid - 1;
-            }
+    public int find_first(int[] nums, int target, int low, int high) {
+        if (low > high) return -1;
+        if (low == high) {
+            // last position
+            if (nums[low] == target) return low;
+            return -1;
         }
-        return -1;
+        int mid = low + (high - low)/2;
+        if (nums[mid] == target) {
+            // go to left as we need to look at left for possible occurences
+            return find_first(nums, target, low, mid);
+        } else if (nums[mid] < target) {
+            return find_first(nums, target, mid + 1, high);
+        } else {
+            return find_first(nums, target, low, mid-1);
+        }        
     }
 
+    public int find_last(int[] nums, int target, int low, int high) {
+        if (low > high) return -1;
+        if (low == high) {
+            // last position
+            if (nums[low] == target) return low;
+            return -1;
+        }
+        int mid = low + (high-low)/2;
+        if (nums[mid] == target) {
+            if (high - low == 1) {
+                if (nums[high] == target) return high;
+                return mid;
+            }
+            return find_last(nums, target, mid, high);
+        } else if (nums[mid] < target) {
+            return find_last(nums, target, mid + 1, high);
+        } else {
+            return find_last(nums, target, low, mid - 1);
+        }
+    }
 }
