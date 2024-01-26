@@ -1,31 +1,35 @@
 class Solution {
     public int[] plusOne(int[] digits) {
-        if (digits == null || digits.length == 0) return new int[]{};
-        int n = digits.length;
-        boolean isAllNines = true;
-        for(int num: digits) {
-            if (num != 9) {
-                isAllNines = false;
-                break;
-            }
+        int result_len = digits.length;
+        int i=0;
+        while (i<digits.length && digits[i] == 9) {
+            i++;
         }
-        int[] res = new int[isAllNines? n+1: n];
+        if (i == digits.length) {
+            result_len++;
+        }
+        int[] result = new int[result_len];
+        int index = result_len - 1;
+        i = digits.length - 1;
         int carry = 1;
-        int index = res.length - 1;
-        for(int i=n-1; i>=0; i--) {
-            int sum = carry + digits[i];
-            if (sum == 10) {
-                carry = 1;
-                res[index] = sum%10;
+        while (i >= 0) {
+            if (carry == 1) {
+                if (digits[i] == 9) {
+                    result[index] = 0;
+                    carry = 1;
+                } else {
+                    result[index] = digits[i] + 1;
+                    carry = 0;
+                }
             } else {
-                res[index] = sum;
-                carry = 0;
+                result[index] = digits[i];
             }
-            index -= 1;
+            index--;
+            i--;
         }
-        if (index == 0) {
-            res[index] = 1;
+        if (carry == 1) {
+            result[0] = carry;
         }
-        return res;
+        return result;
     }
 }
