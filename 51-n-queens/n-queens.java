@@ -1,30 +1,30 @@
 class Solution {
     public List<List<String>> solveNQueens(int n) {
-        List<List<String>>  result = new ArrayList<>();
-        int[] arr = new int[n];
-        Arrays.fill(arr, -1);
-        positionQueens(0, n, new boolean[2*n -1], new boolean[2*n -1], result, arr);
+        List<List<String>>  result = new ArrayList<>();        
+        positionQueens(0, new HashSet<>(), n, new HashSet<>(), new HashSet<>(), result, new int[n]);
         return result;
     }
-    public void positionQueens(int row, int n, boolean[] diag1, boolean[] diag2, List<List<String>> result, int[] res) {
+    public void positionQueens(int row, Set<Integer> columns, int n, Set<Integer> set1, Set<Integer> set2, List<List<String>> result, int[] res) {
         if (row == n) {
             result.add(createResult(res));
             return;
         }
         for (int i=0; i<n; i++) {
-            if (res[i] != -1 || diag1[row + i]) continue;
-            int x = row - i;
-            if (row - i < 0) {
-                x = Math.abs(row - i) + (n -1);
-            }
-            if (diag2[x]) continue;
+            if (columns.contains(i) || set1.contains(i) || set2.contains(i)) continue;
             res[i] = row;
-            diag1[row + i] = true;
-            diag2[x] = true;
-            positionQueens(row+1, n, diag1, diag2, result, res);
-            diag1[row + i] = false;
-            diag2[x] = false;
-            res[i] = -1;          
+            columns.add(i);
+            Set<Integer> leftSet = new HashSet<>();
+            Set<Integer> rightSet = new HashSet<>();
+            for (int num: set1) {
+                if (num - 1 >= 0) leftSet.add(num -1);
+            }
+            for (int num: set2) {
+                if (num + 1 < n) rightSet.add(num + 1);
+            }
+            if (i - 1 >= 0) leftSet.add(i -1);
+            if (i + 1 < n) rightSet.add(i + 1);
+            positionQueens(row+1, columns, n, leftSet, rightSet, result, res);
+            columns.remove(i);            
         }
         
     }
