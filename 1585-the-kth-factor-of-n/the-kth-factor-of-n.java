@@ -8,9 +8,11 @@ class Solution {
                 if (count == k) return i;
             }
         }
+        // special case for mid
         if (mid*mid == n) {
+            // perfect square
             mid -= 1;
-        }
+        }         
         for (int i=mid; i >= 1; i--) {
             if (n % i == 0) {
                 count++;
