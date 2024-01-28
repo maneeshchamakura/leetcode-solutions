@@ -14,14 +14,16 @@ class Solution:
                 max_len = max(max_len, one_count - 1)
         for i in range(len(nums) - 1, -1, -1):
             num = nums[i]
-            if num == 1:
+            if num == 1 or num in visited:
                 continue
             current = num
+            visited.add(num)
             first_val = int(math.sqrt(current))
             length = 1
             while first_val in count_dict and first_val*first_val == current:
                 if count_dict[first_val] >= 2:
                     length += 1
+                    visited.add(first_val)
                 else:
                     break
                 current = first_val
