@@ -8,7 +8,5 @@ class Solution:
         result = []
         while len(char_list) > 0:
             ans, char = heappop(char_list)
-            while ans > 0:
-                ans -= 1
-                result.append(char)
+            result.extend([char]*ans)
         return ''.join(reversed(result))
