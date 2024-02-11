@@ -2,43 +2,40 @@ class Solution:
     def countMatchingSubarrays(self, nums: List[int], pattern: List[int]) -> int:
         n = len(nums)
         m = len(pattern)
-        new_pattern = ""
+        count = 0
+        new_pattern = []
         for val in pattern:
             if val == 1:
-                new_pattern += "1"
+                new_pattern.append(1)
             elif val == 0:
-                new_pattern += "2"
-            else:
-                new_pattern += "3"
-        text = ""
+                new_pattern.append(2)
+            elif val == -1:
+                new_pattern.append(3)
+        whole_arr = []
         for i in range(n-1):
             if nums[i] > nums[i+1]:
-                text += "3"
+                whole_arr.append(3)
             elif nums[i] == nums[i+1]:
-                text += "2"
+                whole_arr.append(2)
             else:
-                text += "1"
-        def compute_lps(string):
-            lps = [0]*len(string)
-            i = 0
-            for j in range(1, len(string)):
-                while i > 0 and string[j] != string[i]:
-                    i = lps[i-1]
-                if string[j] == string[i]:
-                    i += 1
-                lps[j] = i
-            return lps
-        def count_substring(string, substring):
-            lps = compute_lps(substring)
-            i = 0
-            count = 0
-            for j in range(len(string)):
-                while i > 0 and string[j] != substring[i]:
-                    i = lps[i-1]
-                if string[j] == substring[i]:
-                    i += 1
-                if i == len(substring):
-                    count += 1
-                    i = lps[i-1]
-            return count
-        return count_substring(text, new_pattern)
+                whole_arr.append(1)
+        prime = 31
+        first_hash = 0
+        count = 0
+        prod = 1
+        pattern_hash = 0
+        mod = 10**9 + 1
+        for i in range(m):
+            first_hash = ((first_hash*prime)%mod + whole_arr[i]%mod)%mod
+            pattern_hash = ((pattern_hash*prime)%mod + new_pattern[i]%mod)%mod
+            if not i == m - 1:
+                prod = (prod%mod * prime%mod)%mod
+        if first_hash == pattern_hash:
+            count += 1
+        for i in range(m, len(whole_arr)):
+            first_hash = (first_hash%mod - (whole_arr[i-m]%mod * prod%mod)%mod)%mod
+            first_hash = (first_hash%mod * prime%mod)%mod
+            first_hash = (first_hash%mod + whole_arr[i]%mod)%mod
+            if first_hash == pattern_hash:
+                count += 1
+        return count
