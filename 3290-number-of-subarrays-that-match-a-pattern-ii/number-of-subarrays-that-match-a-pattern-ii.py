@@ -2,25 +2,22 @@ class Solution:
     def countMatchingSubarrays(self, nums: List[int], pattern: List[int]) -> int:
         n = len(nums)
         m = len(pattern)
-        count = 0
-        new_pattern = []
+        new_pattern = ""
         for val in pattern:
             if val == 1:
-                new_pattern.append(1)
+                new_pattern += "1"
             elif val == 0:
-                new_pattern.append(2)
-            elif val == -1:
-                new_pattern.append(3)
-        whole_arr = []
+                new_pattern += "2"
+            else:
+                new_pattern += "3"
+        text = ""
         for i in range(n-1):
             if nums[i] > nums[i+1]:
-                whole_arr.append(3)
+                text += "3"
             elif nums[i] == nums[i+1]:
-                whole_arr.append(2)
+                text += "2"
             else:
-                whole_arr.append(1)
-        pattern = ''.join([str(i) for i in new_pattern])
-        text = ''.join([str(i) for i in whole_arr])
+                text += "1"
         def compute_lps(string):
             lps = [0]*len(string)
             i = 0
@@ -44,4 +41,4 @@ class Solution:
                     count += 1
                     i = lps[i-1]
             return count
-        return count_substring(text, pattern)
+        return count_substring(text, new_pattern)
