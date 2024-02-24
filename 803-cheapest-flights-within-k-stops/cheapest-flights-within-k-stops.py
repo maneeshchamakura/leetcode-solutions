@@ -1,13 +1,12 @@
-from collections import defaultdict
 from queue import Queue
-
 class Solution:
     def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
-        adj = defaultdict(list)
+        graph = defaultdict(list)
         for flight in flights:
-            adj[flight[0]].append((flight[1], flight[2]))
-
-        dist = [float('inf')] * n
+            a, b, c = flight[0], flight[1], flight[2]
+            graph[a].append((b, c))
+        
+        dist = [float('inf')]*n
         dist[src] = 0
 
         q = Queue()
@@ -19,13 +18,11 @@ class Solution:
             for _ in range(sz):
                 node, distance = q.get()
 
-                if node not in adj: continue
+                if node not in graph: continue
 
-                for neighbour, price in adj[node]:
-                    if price + distance >= dist[neighbour]: continue
-                    dist[neighbour] = price + distance
-                    q.put((neighbour, dist[neighbour]))
-
+                for neighbor, price in graph[node]:
+                    if price + distance >= dist[neighbor]: continue
+                    dist[neighbor] = price + distance
+                    q.put((neighbor, dist[neighbor]))
             stops += 1
-
-        return dist[dst] if dist[dst] != float('inf') else -1
+        return  dist[dst] if dist[dst] != float('inf') else -1
