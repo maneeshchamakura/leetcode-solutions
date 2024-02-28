@@ -7,16 +7,19 @@ class Solution:
             graph[c2].append(c1)
         # while in visiting state = -1
         # after visiting set to 1
+        stack = []
+        visited = set()
         def hascycle(node):
-            if state[node] == 1:
+            if node in visited:
+                if node in stack:
+                    return True
                 return False
-            if state[node] == -1:
-                return True
-            state[node] = -1
+            visited.add(node)
+            stack.append(node)
             for neighbor in graph[node]:
                 if hascycle(neighbor):
                     return True
-            state[node] = 1
+            stack.pop()
             return False
         for i in range(numCourses):
             if hascycle(i):
