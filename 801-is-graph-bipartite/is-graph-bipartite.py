@@ -2,33 +2,27 @@ class Solution:
     def isBipartite(self, graph: List[List[int]]) -> bool:
         # start with a node
         # put it in the first set
-        set1 = set()
-        set2 = set()
         n = len(graph)
+        set1, set2 = set(), set()
         visited = set()
-        def is_graph_bipartite(node):
+        def is_graph_bipartite(node, parent_set_no):
             if node in visited:
                 return True
-            q = deque()
-            q.append((node, 1))
-            set1.add(node)            
+            current_set_no = 2 if parent_set_no == 1 else 1
+            current_set = set1 if current_set_no == 1 else set2
+            current_set.add(node)
             visited.add(node)
-            while q:
-                sz = len(q)
-                for _ in range(sz):
-                    current_node, current_set_no = q.popleft()
-                    other_set_no = 2 if current_set_no == 1 else 1
-                    current_set = set1 if current_set_no == 1 else set2
-                    other_set = set1 if other_set_no == 1 else set2
-                    for neighbor in graph[current_node]:
-                        if neighbor in current_set:
-                            return False
-                        other_set.add(neighbor)
-                        if neighbor not in visited:
-                            q.append((neighbor, other_set_no))
-                            visited.add(neighbor)
+            for neighbor in graph[node]:
+                if neighbor in current_set:
+                    return False
+                if neighbor in visited:
+                    continue
+                is_valid = is_graph_bipartite(neighbor, current_set_no)
+                if not is_valid:
+                    return is_valid
             return True
+            
         for i in range(n):
-            if not is_graph_bipartite(i):
+            if not is_graph_bipartite(i, 2):
                 return False
         return True
