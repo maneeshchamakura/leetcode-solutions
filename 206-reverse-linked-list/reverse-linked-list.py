@@ -4,20 +4,13 @@
 #         self.val = val
 #         self.next = next
 class Solution:
-    def reverseList(self, node: Optional[ListNode]) -> Optional[ListNode]:
-        result = None
-        def reverse(head):
-            nonlocal result
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        def recurse(head, prev):
             if head is None:
                 return None
-            new_head = reverse(head.next)
-            head.next = None
-            if new_head is None:
-                result = head
-                return head
-            print (f"for {head.val} {new_head.val}")
-            new_head.next = head
-            print (f"returning {new_head.next.val}")
-            return new_head.next
-        reverse(node)
-        return result
+            new_head = recurse(head.next, head)            
+            head.next = prev
+            if new_head is not None:
+                return new_head
+            return head
+        return recurse(head, None)
