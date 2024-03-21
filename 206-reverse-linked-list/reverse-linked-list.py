@@ -11,7 +11,7 @@ class Solution:
             if head is None:
                 return None
             new_head = reverse(head.next)
-            # head.next = None
+            head.next = None
             if new_head is None:
                 result = head
                 return head
@@ -19,7 +19,5 @@ class Solution:
             new_head.next = head
             print (f"returning {new_head.next.val}")
             return new_head.next
-        x = reverse(node)
-        if x is not None:
-            x.next = None
+        reverse(node)
         return result
