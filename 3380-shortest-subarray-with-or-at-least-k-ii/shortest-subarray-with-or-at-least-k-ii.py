@@ -4,7 +4,6 @@ class Solution:
             res = 0
             for i, c in enumerate(count):
                 if c > 0: res += 1 << i
-                i += 1
             return res
         
         count = [0] * 32
